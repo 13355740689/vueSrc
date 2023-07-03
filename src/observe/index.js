@@ -1,19 +1,30 @@
+/*
+ * @Author: zdh
+ * @Date: 2023-07-02 22:07:36
+ * @LastEditTime: 2023-07-03 10:30:21
+ * @Description: 
+ */
 import { ArrayMethods } from './arr'
 export function observer(data) {
-    // 1判断空
-    if (typeof data !== 'object' || data === null) {
-        return data
-    }
-    // 1对象 通过一个类
-    return new Observer(data)
+  // 1判断空
+  if (typeof data !== 'object' || data === null) {
+      return data
+  }
+  // 1对象 通过一个类
+  return new Observer(data)
 }
 
 class Observer{
     constructor(value) {
+        // 给 value 定义一个属性
+        Object.defineProperty(value, "__ob__", {
+          enumerable: false,
+          value: this
+        })
         // 判断数据
         if (Array.isArray(value)) {
             value.__proto__ = ArrayMethods
-            console.log('----array---------')
+            this.observeArray(value) // 处理对象数组
         } else {
             this.walk(value) // 遍历
         }
@@ -27,6 +38,11 @@ class Observer{
             defineReactive(data, key, value)
         }
     }
+    observeArray(value) { // [{a: 1}]
+      for(let i = 0; i < value.length; i++) {
+        observer(value[i])
+      }
+    }
 }
 
 // 对对象的属性进行劫持
@@ -34,7 +50,6 @@ function defineReactive(data, key, value) {
     observer(value) // 深度代理
     Object.defineProperty(data, key, {
         get() {
-            console.log('获取')
             return value
         },
         set(newValue) {

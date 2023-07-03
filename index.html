@@ -1,3 +1,9 @@
+<!--
+ * @Author: zdh
+ * @Date: 2023-07-02 22:09:06
+ * @LastEditTime: 2023-07-03 16:01:53
+ * @Description: 
+-->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6,7 +12,7 @@
     <title>Document</title>
 </head>
 <body>
-    <div id="app">hello</div>
+    <div id="app">hello{{ msg }}</div>
     <script src="dist/vue.js"></script>
     <script>
         let vm = new Vue({
@@ -18,7 +24,12 @@
                     a: {
                         b: 20
                     },
-                    list: [1, 2, 4]
+                    list: [1, 2, 4],
+                    arr: [{
+                      a: 1
+                    }, {
+                      b: 2
+                    }]
                 }
             },
             props: {
@@ -31,7 +42,9 @@
 
             }
         })
-        console.log(vm._data.list.push(10))
+
+        // vue初次渲染 => 先初始化数据 => 将模板进行编译 => 变成render() => 生成虚拟节点 => 变成真实DOM => 放到页面
+        // vue 模板编译 render > template > el 注意：必须要有el
     </script>
 </body>
 </html>

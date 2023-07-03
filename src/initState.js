@@ -1,3 +1,9 @@
+/*
+ * @Author: zdh
+ * @Date: 2023-07-02 21:34:34
+ * @LastEditTime: 2023-07-03 15:39:22
+ * @Description: 
+ */
 import { observer } from "./observe/index"
 
 export function initState(vm) {
@@ -13,5 +19,20 @@ function initData(vm) {
     let data = vm.$options.data
     data = vm._data = typeof data === 'function' ? data.call(vm) : data // 注意 this
     // data 数据进行劫持
+    // 将 data 上的所有属性代理到实例上
+    for (let key in data) {
+      proxy(vm, "_data", key)
+    }
     observer(data)
+}
+
+function proxy(vm, source, key) {
+  Object.defineProperty(vm, key, {
+    get() {
+      return vm[source][key]
+    },
+    set(newValue) {
+      vm[source][key] = newValue
+    }
+  })
 }
