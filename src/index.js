@@ -1,4 +1,13 @@
+/*
+ * @Author: zdh
+ * @Date: 2023-07-02 17:37:02
+ * @LastEditTime: 2023-07-04 16:26:39
+ * @Description: 
+ */
 import { initMixin } from "./init"
+import { lifecycleMixin } from "./lifecycle"
+import { renderMixin } from "./vnode/index"
+
 
 function Vue(options) {
     // 初始化
@@ -7,4 +16,6 @@ function Vue(options) {
 
 initMixin(Vue)
 
+lifecycleMixin(Vue) // 添加生命周期
+renderMixin(Vue) // 添加render
 export default Vue

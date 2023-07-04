@@ -1,12 +1,13 @@
 /*
  * @Author: zdh
  * @Date: 2023-07-02 21:13:30
- * @LastEditTime: 2023-07-03 16:26:46
+ * @LastEditTime: 2023-07-04 17:15:59
  * @Description: 
  */
 
 import { initState } from "./initState.js"
 import { compileToFunction } from './compile/index.js'
+import { mountComponent } from "./lifecycle.js"
 export function initMixin(Vue) {
     Vue.prototype._init = function(options) {
         let vm = this
@@ -26,18 +27,22 @@ export function initMixin(Vue) {
     // el template render
     let vm = this
     el = document.querySelector(el) // 获取元素
+    vm.$el = el
     let options = vm.$options
     if(!options.render) { // 没有
       let template = options.template
       if (!template && el) {
         el = el.outerHTML
-        console.log(el)
         // 变成ast语法树
-        let ast = compileToFunction(el)
+        let render = compileToFunction(el)
         // render()
-        // 
+
+        // (1) 将render 函数变成vnode  (2) vnode 变成 真实DOM放到页面上去
+        options.render = render
       }
     }
+    // 挂载组件
+    mountComponent(vm, el)
   }
 }
 
