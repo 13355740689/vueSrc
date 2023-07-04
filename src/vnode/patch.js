@@ -34,3 +34,7 @@ function createEl(vnode) { // vnode: {tag, text, data, children}
   }
   return vnode.el
 }
+
+// vue面试题
+// vue的渲染流程 =》数据初始化 =》 对模板进行编译 =》 变成render函数 =》通过render函数编程vnode => 变成真是DOM
+// =》放到页面

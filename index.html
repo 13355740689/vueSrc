@@ -15,6 +15,11 @@
     <div id="app" style="color: red;font-size: 14px;">hello{{ msg }} <h>-:{{test}}</h></div>
     <script src="dist/vue.js"></script>
     <script>
+        Vue.Mixin({
+            created(){
+
+            }
+        })
         let vm = new Vue({
             el: '#app',
             data() {
@@ -45,6 +50,10 @@
 
         // vue初次渲染 => 先初始化数据 => 将模板进行编译 => 变成render() => 生成虚拟节点 => 变成真实DOM => 放到页面
         // vue 模板编译 render > template > el 注意：必须要有el
+
+        // vue生命周期 实现原理
+        // （1）Vue.minin({}) // 混入
+        // （2）设计模式 订阅发布 vue options：{data:[], watch:[]}
     </script>
 </body>
 </html>

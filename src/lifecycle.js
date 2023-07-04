@@ -13,7 +13,6 @@ export function mountComponent(vm, el) {
 
 export function lifecycleMixin(Vue) {
   Vue.prototype._update = function(vnode) { // vnode => 真实的dom
-    console.log(vnode)
     let vm = this
     // 两个参数 （1）旧dom (2)vnode
     vm.$el = patch(vm.$el, vnode)

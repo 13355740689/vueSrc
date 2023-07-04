@@ -23,7 +23,6 @@ export function initMixin(Vue) {
 
     // 创建 $mount
   Vue.prototype.$mount = function(el) {
-    console.log(el)
     // el template render
     let vm = this
     el = document.querySelector(el) // 获取元素
