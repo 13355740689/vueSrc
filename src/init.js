@@ -1,19 +1,24 @@
 /*
  * @Author: zdh
  * @Date: 2023-07-02 21:13:30
- * @LastEditTime: 2023-07-04 17:15:59
+ * @LastEditTime: 2023-07-05 09:35:15
  * @Description: 
  */
 
 import { initState } from "./initState.js"
 import { compileToFunction } from './compile/index.js'
 import { mountComponent } from "./lifecycle.js"
+import { mergeOptions } from "./utils/index.js"
+import { callHook } from "./lifecycle.js"
 export function initMixin(Vue) {
     Vue.prototype._init = function(options) {
         let vm = this
-        vm.$options = options
+        vm.$options = mergeOptions(Vue.options, options)
+
+        callHook(vm, 'beforeCreated')
         // 初始化状态
         initState(vm)
+        callHook(vm, 'created')
 
         // 渲染模板
         if(vm.$options.el) {

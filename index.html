@@ -1,7 +1,7 @@
 <!--
  * @Author: zdh
  * @Date: 2023-07-02 22:09:06
- * @LastEditTime: 2023-07-04 17:58:22
+ * @LastEditTime: 2023-07-05 14:56:37
  * @Description: 
 -->
 <!DOCTYPE html>
@@ -12,18 +12,20 @@
     <title>Document</title>
 </head>
 <body>
-    <div id="app" style="color: red;font-size: 14px;">hello{{ msg }} <h>-:{{test}}</h></div>
+  <!-- <div id="app" style="color: red;font-size: 14px;">hello{{ msg }} <h>-:{{test}}</h> name: {{name}}</div> -->
+  <div id="app" style="color: red;font-size: 14px;">
+    name: {{name.a}}
+    <h2>{{list}}</h2>
+  </div>
     <script src="dist/vue.js"></script>
     <script>
-        Vue.Mixin({
-            created(){
-
-            }
-        })
         let vm = new Vue({
             el: '#app',
             data() {
                 return {
+                    name: {
+                      a: '111'
+                    },
                     msg: 'Hello',
                     test: 'Test',
                     a: {
@@ -54,6 +56,26 @@
         // vue生命周期 实现原理
         // （1）Vue.minin({}) // 混入
         // （2）设计模式 订阅发布 vue options：{data:[], watch:[]}
+
+        setTimeout(() => {
+          console.log('11111111')
+          vm.name = '张珊'
+          vm.list.push(5)
+          // vm._update(vm._render()) // vm._render() 获取到vm实例上的数据  vm._update 更新页面
+        }, 3000)
+
+        // 问题 自动更新
+        // 1.数据变化，自动更新视图
+        // 2 vue中更新组件策略是以组件为单位，给每个组件添加一个watcher,属性变化后 调用
+
+        // dep和watch 关系 多对多 computed
+
+        // 数组收集
+        // 1.给所有对象类型增加一个dep
+        // 2.获取数组的值，会调用get方法，希望当前数组记住当前渲染的watcher
+        //  2.1 需要获取到当前的dep
+        //  2.2 当前面对数组取值的时候，我们就让数组的dep记住这个watcher
+        // 3.我们获取更新数组的时候 调用push等等方法 找到我们这个watcher 进行更新
     </script>
 </body>
 </html>

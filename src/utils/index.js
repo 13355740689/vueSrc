@@ -1,3 +1,9 @@
+/*
+ * @Author: zdh
+ * @Date: 2023-07-05 09:05:12
+ * @LastEditTime: 2023-07-05 09:17:25
+ * @Description: 
+ */
 export const HOOKS = [
     "beforeCreate",
     "created",
@@ -11,8 +17,8 @@ export const HOOKS = [
 
 // 策略模式
 let starts = {}
-starts.data = function() { // 合并data
-
+starts.data = function(parentVal, childVal) { // 合并data
+  return childVal
 }
 starts.computed = function() { // 合并computed
 

@@ -1,10 +1,11 @@
 /*
  * @Author: zdh
  * @Date: 2023-07-02 22:07:36
- * @LastEditTime: 2023-07-03 10:30:21
+ * @LastEditTime: 2023-07-05 15:16:17
  * @Description: 
  */
 import { ArrayMethods } from './arr'
+import Dep from './dep'
 export function observer(data) {
   // 1判断空
   if (typeof data !== 'object' || data === null) {
@@ -19,10 +20,13 @@ class Observer{
         // 给 value 定义一个属性
         Object.defineProperty(value, "__ob__", {
           enumerable: false,
+          configurable: true,
           value: this
         })
+        this.dep = new Dep() // 给所有对象类型增加一个dep
         // 判断数据
         if (Array.isArray(value)) {
+
             value.__proto__ = ArrayMethods
             this.observeArray(value) // 处理对象数组
         } else {
@@ -47,15 +51,23 @@ class Observer{
 
 // 对对象的属性进行劫持
 function defineReactive(data, key, value) {
-    observer(value) // 深度代理
+    let childDep = observer(value) // 深度代理
+    let dep = new Dep() // 给每一个属性添加一个dep
     Object.defineProperty(data, key, {
-        get() {
-            return value
+        get() { // 收集watcher
+          if(Dep.target) {
+            dep.depend()
+            if(childDep.dep) {
+              childDep.dep.depend() // 数组收集
+            }
+          }
+          return value
         },
         set(newValue) {
             if (newValue === value) return
             observer(newValue)
             value = newValue
+            dep.notify()
         }
     })
 }

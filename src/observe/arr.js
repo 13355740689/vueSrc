@@ -1,7 +1,7 @@
 /*
  * @Author: zdh
  * @Date: 2023-07-02 22:06:52
- * @LastEditTime: 2023-07-03 10:30:46
+ * @LastEditTime: 2023-07-05 14:45:26
  * @Description: 
  */
 // 重写数组
@@ -39,6 +39,7 @@ methods.forEach(item => {
         if (inserted) {
           ob.observeArray(inserted)
         }
+        ob.dep.notify()
         return result
     }
 })

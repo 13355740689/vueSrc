@@ -54,7 +54,8 @@ function start(tag, attrs) { // 开始标签
 }
 function charts(text) {
   // 空格
-  text = text.replace(/a/g, '')
+  // text = text.replace(/\s/g, '')
+  text = text.trim()
   if(text) {
     createParent.children.push({
       type: 3,
