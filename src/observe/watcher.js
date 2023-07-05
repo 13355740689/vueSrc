@@ -1,7 +1,7 @@
 /*
  * @Author: zdh
  * @Date: 2023-07-05 10:09:41
- * @LastEditTime: 2023-07-05 13:05:25
+ * @LastEditTime: 2023-07-05 17:59:57
  * @Description: 
  */
 // (1) 通过这个类watcher 实现更新
@@ -41,8 +41,17 @@ class Watcher {
   }
   // 更新
   update() {
-    this.getter()
+    // 注意: 不要数据更新后每次都调用get方法， get方法会重新渲染
+    // 缓存
+    // this.getter()
+    queueWatcher(this)
   }
+}
+
+let queue = [] // 将需要批量更新的watcher存放到一个队列中
+
+function queueWatcher(watcher) {
+  let id = watcher.id // 每个组件都是同一个watcher
 }
 
 export default Watcher
