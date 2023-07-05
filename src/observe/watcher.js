@@ -5,6 +5,7 @@
  * @Description: 
  */
 // (1) 通过这个类watcher 实现更新
+import { nextTick } from '../utils/nextTick'
 import { pushTarget, popTarget } from './dep'
 let id = 0
 class Watcher {
@@ -33,6 +34,9 @@ class Watcher {
       dep.addSub(this)
     }
   }
+  run(){
+    this.get()
+  }
   // 初次渲染
   get() {
     pushTarget(this)  // 给dep 添加watch
@@ -49,9 +53,36 @@ class Watcher {
 }
 
 let queue = [] // 将需要批量更新的watcher存放到一个队列中
+let has = {}
+let pending = false
+function flushWatcher(){
+  queue.forEach(item => item.run())
+          queue = []
+        has = {}
+        pending = false
+}
 
 function queueWatcher(watcher) {
   let id = watcher.id // 每个组件都是同一个watcher
+
+  if(has[id] == null) {
+    // 列队处理
+    queue.push(watcher) // 将watcher 添加到队列中
+    has[id] = true
+    // 防抖
+    if(!pending) {
+      // 异步： 等待同步代码执行完毕之后，再执行
+      // setTimeout(() => {
+      //   queue.forEach(item => item.run())
+      //   queue = []
+      //   has = {}
+      //   pending = false
+      // }, 0)
+
+      nextTick(flushWatcher) // 相当于定时器
+    }
+    pending = true
+  }
 }
 
 export default Watcher
@@ -60,3 +91,7 @@ export default Watcher
 // dep :dep和data中的属性是一一对应
 // watcher :在视图上用几个 就有几个watcher
 // dep与watcher: 一对多 dep.name=[w1, w2]
+
+// nenxttick 原理
+// 优化
+// 1.创建nextTick

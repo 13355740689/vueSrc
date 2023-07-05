@@ -6,6 +6,7 @@
  */
 import { initGlobalApi } from "./global-api/index"
 import { initMixin } from "./init"
+import { stateMixin } from "./initState"
 import { lifecycleMixin } from "./lifecycle"
 import { renderMixin } from "./vnode/index"
 
@@ -19,7 +20,7 @@ initMixin(Vue)
 
 lifecycleMixin(Vue) // 添加生命周期
 renderMixin(Vue) // 添加render
-
+stateMixin(Vue) // 给vm添加 $nextTick
 // 全局方法 Vueminin Vue.component Vue.extend
 initGlobalApi(Vue)
 export default Vue

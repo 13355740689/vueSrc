@@ -5,6 +5,7 @@
  * @Description: 
  */
 import { observer } from "./observe/index"
+import { nextTick } from "./utils/nextTick"
 
 export function initState(vm) {
     let opts = vm.$options
@@ -35,4 +36,11 @@ function proxy(vm, source, key) {
       vm[source][key] = newValue
     }
   })
+}
+
+export function stateMixin(vm) {
+  // 列队 :1就是vue自己的nextTick 用户自己ide
+  vm.prototype.$nextTick = function(cb) { // nextTick: 数据更新之后获取到最新的DOM
+    nextTick(cb)
+  }
 }
