@@ -1,7 +1,7 @@
 /*
  * @Author: zdh
  * @Date: 2023-07-05 09:05:12
- * @LastEditTime: 2023-07-05 09:17:25
+ * @LastEditTime: 2023-07-06 13:29:03
  * @Description: 
  */
 export const HOOKS = [
@@ -20,13 +20,13 @@ let starts = {}
 starts.data = function(parentVal, childVal) { // 合并data
   return childVal
 }
-starts.computed = function() { // 合并computed
+// starts.computed = function() { // 合并computed
 
-}
-starts.watch = function() { // 合并watch
-}
-starts.methods = function() { // 合并methods
-}
+// }
+// starts.watch = function() { // 合并watch
+// }
+// starts.methods = function() { // 合并methods
+// }
 
 // 遍历生命周期
 HOOKS.forEach(hooks => {
@@ -66,6 +66,6 @@ export function mergeOptions(parent, child) {
             options[key] = child[key]
         }
     }
-    
+
     return options
 }

@@ -1,7 +1,7 @@
 <!--
  * @Author: zdh
  * @Date: 2023-07-02 22:09:06
- * @LastEditTime: 2023-07-05 14:56:37
+ * @LastEditTime: 2023-07-06 17:52:25
  * @Description: 
 -->
 <!DOCTYPE html>
@@ -26,6 +26,11 @@
                     name: {
                       a: '111'
                     },
+                    c: {
+                      c: {
+                        c: '222'
+                      }
+                    },
                     msg: 'Hello',
                     test: 'Test',
                     a: {
@@ -43,7 +48,11 @@
 
             },
             watch: {
-
+              'c.c.c '(newValue, oldValue) {
+                console.log('1111111222222')
+                console.log(newValue)
+                console.log(oldValue)
+              }
             },
             computed: {
 
@@ -56,13 +65,15 @@
         // vue生命周期 实现原理
         // （1）Vue.minin({}) // 混入
         // （2）设计模式 订阅发布 vue options：{data:[], watch:[]}
-
+        vm.c.c.c = 'new'
         setTimeout(() => {
           console.log('11111111')
           vm.name = '张珊'
           vm.list.push(5)
+          console.log(vm)
+          
           // vm._update(vm._render()) // vm._render() 获取到vm实例上的数据  vm._update 更新页面
-        }, 3000)
+        }, 1000)
 
         // 问题 自动更新
         // 1.数据变化，自动更新视图

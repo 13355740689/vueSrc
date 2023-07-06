@@ -1,7 +1,7 @@
 /*
  * @Author: zdh
  * @Date: 2023-07-05 10:09:41
- * @LastEditTime: 2023-07-05 17:59:57
+ * @LastEditTime: 2023-07-06 17:53:31
  * @Description: 
  */
 // (1) 通过这个类watcher 实现更新
@@ -9,21 +9,33 @@ import { nextTick } from '../utils/nextTick'
 import { pushTarget, popTarget } from './dep'
 let id = 0
 class Watcher {
-  constructor(vm, updateComponent, cb, options) {
-    // (1)
+  constructor(vm, exprOrfn, cb, options) {
+    // 1.创建类第一步将选项放在实例上
     this.vm = vm
-    this.exprOrfn = updateComponent
+    this.exprOrfn = exprOrfn
     this.cb = cb
     this.options = options
+    // 2. 每一组件只有一个watcher 
     this.id = id++
-    this.deps = [] // watcher存放 dep
+    this.user = !! options.user
+    // 3.判断表达式是不是一个函数
+    this.deps = [] // watcher 记录有多少 dep 依赖
     this.depsId = new Set()
     // 判断
-    if(typeof updateComponent === 'function') {
-      this.getter = updateComponent // 用来更新视图
+    if(typeof exprOrfn === 'function') {
+      this.getter = exprOrfn // 用来更新视图
+    } else { // {a, b, c} 字符串 变成函数
+      this.getter = function() { // 属性 c.c.c
+        let path = exprOrfn.split('.')
+        let obj = vm
+        for(let i = 0; i < path.length; i++) {
+          obj = obj[path[i]]
+        }
+        return obj
+      }
     }
-    // 更新视图
-    this.get()
+    // 4.执行渲染页面
+    this.value = this.get() // 保存watch 初始值
   }
   addDep(dep) {
     // 1.去重
@@ -34,14 +46,23 @@ class Watcher {
       dep.addSub(this)
     }
   }
-  run(){
-    this.get()
+  run(){ // old new
+    let value = this.get() // new
+    let oldValue = this.value // old
+    this.value = value
+    // 执行 handler(cb) 这个用户watcher
+    console.log('7777777777777')
+    console.dir(this.user)
+    if(this.user) {
+      this.cb.call(this.vm, value, oldValue )
+    }
   }
   // 初次渲染
   get() {
     pushTarget(this)  // 给dep 添加watch
-    this.getter() // 渲染页面 vm._update(vm.render()) _s(msg)
+    const value = this.getter() // 渲染页面 vm._update(vm.render()) _s(msg)
     popTarget() // 给dep 取消watcher
+    return value
   }
   // 更新
   update() {
