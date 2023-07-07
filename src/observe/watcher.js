@@ -1,7 +1,7 @@
 /*
  * @Author: zdh
  * @Date: 2023-07-05 10:09:41
- * @LastEditTime: 2023-07-06 17:53:31
+ * @LastEditTime: 2023-07-07 14:42:38
  * @Description: 
  */
 // (1) 通过这个类watcher 实现更新
@@ -21,6 +21,7 @@ class Watcher {
     // 3.判断表达式是不是一个函数
     this.deps = [] // watcher 记录有多少 dep 依赖
     this.depsId = new Set()
+
     // 判断
     if(typeof exprOrfn === 'function') {
       this.getter = exprOrfn // 用来更新视图
@@ -28,6 +29,7 @@ class Watcher {
       this.getter = function() { // 属性 c.c.c
         let path = exprOrfn.split('.')
         let obj = vm
+
         for(let i = 0; i < path.length; i++) {
           obj = obj[path[i]]
         }
@@ -51,8 +53,6 @@ class Watcher {
     let oldValue = this.value // old
     this.value = value
     // 执行 handler(cb) 这个用户watcher
-    console.log('7777777777777')
-    console.dir(this.user)
     if(this.user) {
       this.cb.call(this.vm, value, oldValue )
     }
@@ -78,9 +78,9 @@ let has = {}
 let pending = false
 function flushWatcher(){
   queue.forEach(item => item.run())
-          queue = []
-        has = {}
-        pending = false
+  queue = []
+  has = {}
+  pending = false
 }
 
 function queueWatcher(watcher) {

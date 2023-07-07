@@ -1,7 +1,7 @@
 /*
  * @Author: zdh
  * @Date: 2023-07-06 09:12:07
- * @LastEditTime: 2023-07-06 17:39:06
+ * @LastEditTime: 2023-07-07 14:29:29
  * @Description: 
  */
 import { observer } from "./observe/index"
@@ -45,7 +45,6 @@ function proxy(vm, source, key) {
 function initWatch(vm) {
   // 1获取watch
   let watch = vm.$options.watch
-  console.log(watch)
   // 2.遍历{a,b,c}
   for(let key in watch) {
     // 2.1 获取 他的属性对应的值 （判断）

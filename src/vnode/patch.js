@@ -1,15 +1,13 @@
 /*
  * @Author: zdh
  * @Date: 2023-07-04 17:16:53
- * @LastEditTime: 2023-07-04 17:57:36
+ * @LastEditTime: 2023-07-07 14:27:57
  * @Description: 
  */
 export function patch(oldVnode, vnode) {
-  console.log(oldVnode, vnode)
   // vnode => 真实dom
   // (1) 创建新dom
   let el = createEl(vnode)
-  console.log(el)
   // (2)替换 1)获取父节点 2）插入 3）删除
   let parentEl = oldVnode.parentNode // body
   parentEl.insertBefore(el, oldVnode.nextsibling)

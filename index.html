@@ -1,7 +1,7 @@
 <!--
  * @Author: zdh
  * @Date: 2023-07-02 22:09:06
- * @LastEditTime: 2023-07-06 17:52:25
+ * @LastEditTime: 2023-07-07 14:43:01
  * @Description: 
 -->
 <!DOCTYPE html>
@@ -14,7 +14,7 @@
 <body>
   <!-- <div id="app" style="color: red;font-size: 14px;">hello{{ msg }} <h>-:{{test}}</h> name: {{name}}</div> -->
   <div id="app" style="color: red;font-size: 14px;">
-    name: {{name.a}}
+    name: {{c.c.c}}
     <h2>{{list}}</h2>
   </div>
     <script src="dist/vue.js"></script>
@@ -48,8 +48,8 @@
 
             },
             watch: {
-              'c.c.c '(newValue, oldValue) {
-                console.log('1111111222222')
+              'c.c.c': function(newValue, oldValue) {
+                console.log('=========')
                 console.log(newValue)
                 console.log(oldValue)
               }
@@ -65,13 +65,11 @@
         // vue生命周期 实现原理
         // （1）Vue.minin({}) // 混入
         // （2）设计模式 订阅发布 vue options：{data:[], watch:[]}
-        vm.c.c.c = 'new'
+        // vm.c.c.c = 'new'
         setTimeout(() => {
-          console.log('11111111')
           vm.name = '张珊'
           vm.list.push(5)
-          console.log(vm)
-          
+          vm.c.c.c = 'new'
           // vm._update(vm._render()) // vm._render() 获取到vm实例上的数据  vm._update 更新页面
         }, 1000)
 

@@ -10,7 +10,7 @@ let timerFunc
 // 处理兼容问题
 if(Promise) {
     timerFunc = () => {
-        Promise.resolve().then() // 异步处理
+        Promise.resolve().then(flush) // 异步处理
     }
 } else if(MutationObserver) { //h5 异步 可以监听 DOM变化， 监控完毕之后再来异步更新
     let observe = new MutationObserver()
@@ -27,7 +27,6 @@ if(Promise) {
     }
 }
 export function nextTick(cb) {
-    console.log(cb)
     // 列队
     callback.push(cb)
     // Promise.then()
