@@ -1,22 +1,30 @@
 /*
  * @Author: zdh
  * @Date: 2023-07-04 17:16:53
- * @LastEditTime: 2023-07-07 14:27:57
+ * @LastEditTime: 2023-07-07 16:59:41
  * @Description: 
  */
 export function patch(oldVnode, vnode) {
-  // vnode => 真实dom
-  // (1) 创建新dom
-  let el = createEl(vnode)
-  // (2)替换 1)获取父节点 2）插入 3）删除
-  let parentEl = oldVnode.parentNode // body
-  parentEl.insertBefore(el, oldVnode.nextsibling)
-  parentEl.removeChild(oldVnode)
-  return el
+  // 原则 将虚拟节点转换成真实的节点
+  // 第一次渲染 oldValue 是一个真实的DOM
+  if(oldVnode.nodeType === 1) {
+    // vnode => 真实dom
+    // (1) 创建新dom
+    let el = createElm(vnode)
+    // (2)替换 1)获取父节点 2）插入 3）删除
+    let parentEl = oldVnode.parentNode // body
+    parentEl.insertBefore(el, oldVnode.nextsibling)
+    parentEl.removeChild(oldVnode)
+    return el
+  } else { // diff
+    // 1 元素不是一样
+  }
+
+
 }
 
-// 创dom
-function createEl(vnode) { // vnode: {tag, text, data, children}
+// vnode 变成真是的DOM
+export function createElm(vnode) { // vnode: {tag, text, data, children}
   let {tag, children, key, data, text} = vnode
   if(typeof tag === 'string') { // 标签
     vnode.el = document.createElement(tag) // 创建元素
@@ -24,7 +32,7 @@ function createEl(vnode) { // vnode: {tag, text, data, children}
     if(children.length > 0) {
       children.forEach(child => {
         // 递归
-        vnode.el.appendChild(createEl(child))
+        vnode.el.appendChild(createElm(child))
       })
     }
   } else {
