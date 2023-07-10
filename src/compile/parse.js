@@ -26,7 +26,10 @@ const startTagClose = /^\s*(\/?)>/;
 // 匹配 {{ }} 表达式
 const defaultTagRE = /\{\{((?:.|\r?\n)+?)\}\}/g;
 
-// 遍历
+
+export function parseHTML(html) {
+
+  // 遍历
 // 创建一个ast对象
 // <div id="app">hello{{ msg }}</div>
 function createAstElement(tag, attrs) {
@@ -72,7 +75,7 @@ function end(tag) {
     createParent.children.push(element)
   }
 }
-export function parseHTML(html) {
+
   while (html) { // html 为空结束
     let textEnd = html.indexOf('<') // 0
     if (textEnd === 0) { // 标签

@@ -1,7 +1,7 @@
 <!--
  * @Author: zdh
  * @Date: 2023-07-07 16:47:36
- * @LastEditTime: 2023-07-07 16:49:23
+ * @LastEditTime: 2023-07-10 10:53:30
  * @Description: 
 -->
 <!DOCTYPE html>
@@ -12,7 +12,18 @@
   <title>Document</title>
 </head>
 <body>
+  <div id="app"></div>
   <script src="dist/vue.js"></script>
-  <script></script>
+  <script>
+    // 1vue 操作 vnode {tag:'div' data: children}
+    // 2真正 DOM
+    // for (let key in app) {
+    //   console.log(key)
+    // }
+    // 更新数据 vue diff算法 最小量更新 （比对） old  new  vnode
+    // 1.创建2个vnode
+    // 2.比对：再数据更新的时候，拿到老的节点和新的节点 做对比 将不同的地方进行更新
+    // 
+  </script>
 </body>
 </html>

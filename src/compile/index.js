@@ -1,11 +1,11 @@
 /*
  * @Author: zdh
  * @Date: 2023-07-03 16:24:34
- * @LastEditTime: 2023-07-04 17:09:15
+ * @LastEditTime: 2023-07-10 11:27:52
  * @Description: 
  */
 import { generate } from "./generate";
-import { parseHTML } from "./parseAst";
+import { parseHTML } from "./parse";
 
 export function compileToFunction(el) {
   // 1.将html变成ast语法树
