@@ -1,7 +1,7 @@
 /*
  * @Author: zdh
  * @Date: 2023-07-04 17:16:53
- * @LastEditTime: 2023-07-10 18:00:37
+ * @LastEditTime: 2023-07-15 14:47:34
  * @Description:
  */
 export function patch(oldVnode, vnode) {
@@ -51,7 +51,7 @@ export function patch(oldVnode, vnode) {
   }
 }
 
-function updateChild(oldChildren, newChildren, el) {
+function updateChild(oldChildren, newChildren, parent) {
   // vue diff 算法 做了很多优化
   // dom 中操作元素 常用的逻辑 尾部添加 头部添加 倒序和正序的方式
   // vue2 采用双指针的方法 遍历
@@ -66,10 +66,80 @@ function updateChild(oldChildren, newChildren, el) {
   let newEndIndex = newChildren.length - 1
   let newEndVnode = newChildren[newEndIndex]
 
+  // 创建旧元素的映射表
+  function makeIndexByKey(child) {
+    let map = {}
+    child.forEach((item, index) => {
+      // 注意没有key
+      if(item.key){
+        map[item.key] = index
+      }
+    })
+    return map
+  }
+  let map = makeIndexByKey(oldChildren)
+
+  function isSameVnode(oldContent, newContent) {
+    return (oldContent.tag === newContent.tag) && (oldContent.key === newContent.key)
+  }
   while(oldStartIndex <= oldEndIndex && newStartIndex <= newEndIndex) {
     // 比对子元素
     // 头部 注意 头部这个元素是不是同一个元素
-    if ()
+    if (isSameVnode(oldStartVnode, newStartVnode)) {
+      // 递归
+      patch(oldStartVnode, newStartVnode)
+      // 移动指针
+      oldStartVnode = oldChildren[++oldStartIndex]
+      newStartVnode = newChildren[++newStartIndex]
+    } else if (isSameVnode(oldEndVnode, newEndVnode)) {
+      // 递归
+      patch(oldEndVnode, newEndVnode)
+      oldEndVnode = oldChildren[--oldEndIndex]
+      newEndVnode = newChildren[--newEndIndex]
+    } else if (isSameVnode(oldStartVnode, newEndVnode)) {
+      patch(oldStartVnode, newEndVnode)
+      oldStartVnode = oldChildren[++oldStartIndex]
+      newEndVnode = newChildren[--newEndIndex]
+    } else if (isSameVnode(oldEndVnode, newStartVnode)) {
+      patch(oldEndVnode, newStartVnode) // 这个元素中有子节点
+      oldEndVnode = oldChildren[--oldEndIndex]
+      newStartVnode = newChildren[++newStartIndex]
+      // 面试题： 为什么要添加key 这个key不能是索引
+      // <li></li>
+    } else { // 儿子之间没有任何关系 暴力比对
+      // 1.创建 旧 元素映射表
+      // 2从老的元素中寻找新的元素 map:{c: 0, b:1, a:2}
+      let moveIndex = map[newStartVnode.key]
+      if(moveIndex === undefined) { // 没有
+        parent.insertBefore(createElm(newStartVnode), oldStartVnode.el)
+      } else { // 有
+        let moveVnode = oldChildren[moveIndex] // 获取到移动的元素
+        oldChildren[moveIndex] = null // 防止数组塌陷
+        // 插入
+        parent.insertBefore(moveVnode.el, oldStartVnode.el)
+        // 问题 可能有儿子
+        patch(moveVnode, newEndVnode)
+      }
+      // 新的元素指针位移
+      newStartVnode = newChildren[++newStartIndex]
+    }
+  }
+
+  // 添加多余的儿子 旧 2 新 3
+  if(newStartIndex <= newEndIndex) { // 2 3
+    for(let i = newStartIndex; i <= newEndIndex; i++) {
+      parent.appendChild(createElm(newChildren[i]))
+    }
+  }
+  // 将老的多余的元素 去掉 Start end
+  if(oldStartIndex <= oldEndIndex) {
+    for(let i = oldStartIndex; i <= oldEndIndex; i++) {
+      // 注意 null
+      let child = oldChildren[i]
+      if(child != null) {
+        parent.removeChild(child.el) // 删除元素
+      }
+    }
   }
 }
 

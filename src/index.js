@@ -1,7 +1,7 @@
 /*
  * @Author: zdh
  * @Date: 2023-07-02 17:37:02
- * @LastEditTime: 2023-07-10 14:44:50
+ * @LastEditTime: 2023-07-11 09:58:21
  * @Description: 
  */
 import { compileToFunction } from "./compile/index"
@@ -31,9 +31,9 @@ initGlobalApi(Vue)
 let vm1 = new Vue({data: {name: '张三'}})
 // let render1 = compileToFunction(`<div id="a" style="color: red" >{{name}}</div>`)
 let render1 = compileToFunction(`<ul>
-  <li>a</li>
-  <li>b</li>
-  <li>c</li>
+  <li style="background: red" key="a">a</li>
+  <li style="background: pink" key="b">b</li>
+  <li style="background: blue" key="c">c</li>
 </ul>`)
 let vnode1 = render1.call(vm1)
 document.body.appendChild(createElm(vnode1))
@@ -42,10 +42,10 @@ let vm2 = new Vue({data: {name: '李四'}})
 // let render2 = compileToFunction(`<p id="b">{{name}}</p>`)
 // let render2 = compileToFunction(`<div id="b">{{name}}</div>`)
 let render2 = compileToFunction(`<ul>
-<li>a</li>
-<li>b</li>
-<li>c</li>
-<li>d</li>
+<li style="background: red" key="a">a</li>
+<li style="background: pink" key="b">b</li>
+<li style="background: blue" key="c">c</li>
+<li style="background: yellow" key="d">d</li>
 </ul>`)
 let vnode2 = render2.call(vm2)
 // patch 比对

@@ -3,7 +3,7 @@ import Watcher from "./observe/watcher"
 /*
  * @Author: zdh
  * @Date: 2023-07-04 16:18:05
- * @LastEditTime: 2023-07-05 10:14:34
+ * @LastEditTime: 2023-07-15 14:45:04
  * @Description: 
  */
 export function mountComponent(vm, el) {
@@ -21,8 +21,15 @@ export function mountComponent(vm, el) {
 export function lifecycleMixin(Vue) {
   Vue.prototype._update = function(vnode) { // vnode => 真实的dom
     const vm = this
-    // 两个参数 （1）旧dom (2)vnode
-    vm.$el = patch(vm.$el, vnode)
+    // vm.$el 真实的DOM
+    // 区分一下 是首次还是更新
+    let preVnode = vm._vnode // 如果是首次 值为null
+    if(!preVnode) {
+      vm.$el = patch(vm.$el, vnode)
+      vm._vnode = vnode // 保存原来的那一次
+    } else {
+      patch(preVnode, vnode)
+    }
   }
 }
 
