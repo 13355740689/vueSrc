@@ -1,7 +1,7 @@
 /*
  * @Author: zdh
  * @Date: 2023-07-05 10:09:41
- * @LastEditTime: 2023-07-07 14:42:38
+ * @LastEditTime: 2023-07-20 11:12:17
  * @Description: 
  */
 // (1) 通过这个类watcher 实现更新
@@ -15,6 +15,9 @@ class Watcher {
     this.exprOrfn = exprOrfn
     this.cb = cb
     this.options = options
+    // computed
+    this.lazy = options.lazy // 如果这个watcher 上有lazy 说明他是 computed
+    this.dirty = this.lazy // dirty 取值的时候 表示用户是否执行
     // 2. 每一组件只有一个watcher 
     this.id = id++
     this.user = !! options.user
@@ -37,7 +40,7 @@ class Watcher {
       }
     }
     // 4.执行渲染页面
-    this.value = this.get() // 保存watch 初始值
+    this.value = this.lazy ? void 0 : this.get() // 保存watch 初始值
   }
   addDep(dep) {
     // 1.去重
@@ -60,7 +63,7 @@ class Watcher {
   // 初次渲染
   get() {
     pushTarget(this)  // 给dep 添加watch
-    const value = this.getter() // 渲染页面 vm._update(vm.render()) _s(msg)
+    const value = this.getter.call(this.vm) // 渲染页面 vm._update(vm.render()) _s(msg)
     popTarget() // 给dep 取消watcher
     return value
   }
@@ -69,7 +72,23 @@ class Watcher {
     // 注意: 不要数据更新后每次都调用get方法， get方法会重新渲染
     // 缓存
     // this.getter()
-    queueWatcher(this)
+    if (this.lazy) { // 这是计算属性的watcher
+      this.dirty = true
+    } else {
+      queueWatcher(this) // 重新渲染
+    }
+  }
+  evaluate() {
+    this.value = this.get()
+    this.dirty = false
+  }
+  depend() {
+    // 收集watcher 存放到dep
+    // 通过这个Watcher 找到对应的所有dep 再让所有dep都记住这渲染的watcher
+    let i = this.deps.length
+    while(i--) {
+      this.deps[i].depend()
+    }
   }
 }
 

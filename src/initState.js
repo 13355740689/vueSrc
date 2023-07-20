@@ -1,9 +1,10 @@
 /*
  * @Author: zdh
  * @Date: 2023-07-06 09:12:07
- * @LastEditTime: 2023-07-07 14:29:29
+ * @LastEditTime: 2023-07-20 11:11:13
  * @Description: 
  */
+import Dep from "./observe/dep"
 import { observer } from "./observe/index"
 import Watcher from "./observe/watcher"
 import { nextTick } from "./utils/nextTick"
@@ -16,6 +17,9 @@ export function initState(vm) {
     }
     if(opts.watch) {
       initWatch(vm)
+    }
+    if(opts.computed) {
+      initComputed(vm)
     }
 }
 
@@ -60,6 +64,64 @@ function initWatch(vm) {
   }
 }
 
+function initComputed(vm) {
+  let computed = vm.$options.computed
+  console.log(computed)
+  // 1.需要一个watcher
+  let watcher = vm._computedWatchers = {}
+  // 2 将computed 属性通过 defineProperty 进行处理
+  for(let key in computed) {
+    // 注意有两种方式 （1） 方法 （对象）
+    let userDef = computed[key]
+    // 获取get
+    let getter = typeof userDef === 'function' ? userDef : userDef.get  // watcher
+    // 给我们的每一个属性 都要添加一个watcher
+    watcher[key] = new Watcher(vm, getter, () => {}, {lazy: true})
+    // defineReactive
+    defineComputed(vm, key, userDef) // 计算属性中的watcher
+  }
+}
+
+let sharedPropDefinition = {}
+function defineComputed(target, key, userDef) { // userDef 是computed的属性值 
+  sharedPropDefinition = {
+    enumerable: true,
+    configurable: true,
+    get: () => {},
+    set: () => {}
+  }
+
+  if (typeof userDef === 'function') {
+    sharedPropDefinition.get = createComputedGetter(key) // 具有缓存机制 通过衣蛾变量 dirty watcher
+  } else {
+    sharedPropDefinition.get = createComputedGetter(key)
+    sharedPropDefinition.set = userDef.set
+  }
+  Object.defineProperty(target, key,  sharedPropDefinition)
+}
+// 高阶函数
+function createComputedGetter(key) { // 返回的是用户的方法
+  return function() {
+    // dirty 为true
+    // if (dirty) { // 在watcher.dirty 还有用户要执行的方法
+    //   // 执行
+    // }
+    // 问题
+    let watcher = this._computedWatchers[key]
+    if(watcher) {
+      if(watcher.dirty) {
+        // 执行 求值 在watcher 重新定义一个方法
+        watcher.evaluate() // 就是走用户的方法
+      }
+      // 判断一下有没有渲染的watcher 有 执行： 相互存放watcher
+      if(Dep.target) { // 说明还有渲染watcher, 收集起来
+        watcher.depend() // watcher 收集起来
+      }
+      return watcher.value
+    }
+  }
+}
+
 // vm.$watch(() => {return 'a'}) // 返回的值就是 watcher 上的属性
 // 格式化处理
 function createWatcher(vm, exprOrfn, handler, options) {
@@ -77,7 +139,7 @@ function createWatcher(vm, exprOrfn, handler, options) {
 }
 
 export function stateMixin(vm) {
-  // 列队 :1就是vue自己的nextTick 用户自己ide
+  // 列队 :1就是vue自己的nextTick 用户自己
   vm.prototype.$nextTick = function(cb) { // nextTick: 数据更新之后获取到最新的DOM
     nextTick(cb)
   },

@@ -1,7 +1,7 @@
 /*
  * @Author: zdh
  * @Date: 2023-07-02 17:23:40
- * @LastEditTime: 2023-07-07 16:50:42
+ * @LastEditTime: 2023-07-15 16:21:36
  * @Description: 
  */
 import babel from 'rollup-plugin-babel'
@@ -22,7 +22,7 @@ export default {
         serve({
             port: 3000,
             contentBase: '',
-            openPage: '/index-diff.html'
+            openPage: '/index-computed.html'
         })
     ]
 }

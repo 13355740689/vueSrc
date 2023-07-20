@@ -1,0 +1,59 @@
+<!--
+ * @Author: zdh
+ * @Date: 2023-07-02 22:09:06
+ * @LastEditTime: 2023-07-20 11:24:50
+ * @Description: 
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+  <!-- <div id="app" style="color: red;font-size: 14px;">hello{{ msg }} <h>-:{{test}}</h> name: {{name}}</div> -->
+  <div id="app" style="color: red;font-size: 14px;">
+    
+    <h2>{{ fullName }}</h2>
+  </div>
+    <script src="dist/vue.js"></script>
+    <script>
+        let vm = new Vue({
+            el: '#app',
+            data() {
+                return {
+                    firstName: '张',
+                    secondName: '三'
+                }
+            },
+            computed: {
+              fullName() {
+                console.log('----执行---')
+                return this.firstName + this.secondName
+              }
+            }
+        })
+        console.log(vm.fullName)
+        setTimeout(() => {
+          vm.firstName = 'li'
+          console.log(vm.fullName)
+        }, 1000)
+    </script>
+</body>
+</html>
+
+<!--
+  1.computed 使用
+  2.初始化computed: 实现 代理
+  3.具有缓存机制 通过衣蛾变量 dirty watcher
+    实现的方式: 通过高阶函数 ：高阶函数 参数是一个函数 或者返回值是一个函数
+
+    4:面试题
+    watch 和 computed
+    computed 具有缓存机制 通过一个变量 dirty
+    watch
+
+    问题： 在视图中 更新数据 fullName 没有效果
+    // 因为这里有多个 watcher 渲染watcher computed watcher
+-->

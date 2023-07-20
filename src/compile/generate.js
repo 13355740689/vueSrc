@@ -1,7 +1,7 @@
 /*
  * @Author: zdh
  * @Date: 2023-07-04 10:54:59
- * @LastEditTime: 2023-07-04 17:10:14
+ * @LastEditTime: 2023-07-15 16:22:27
  * @Description: 
  */
 /**
@@ -47,7 +47,7 @@ function gen(node) { // 1元素 3文本
   } else { // 文本 （1） 只是文本 （2） {{}}
     let text = node.text // 获取文本
     if (!defaultTagRE.test(text)) {
-      return `_v(${json.stringify(text)})`
+      return `_v(${JSON.stringify(text)})`
     }
     // {{}}
     let tokens = []
