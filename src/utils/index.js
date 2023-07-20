@@ -1,7 +1,7 @@
 /*
  * @Author: zdh
  * @Date: 2023-07-05 09:05:12
- * @LastEditTime: 2023-07-06 13:29:03
+ * @LastEditTime: 2023-07-20 15:10:57
  * @Description: 
  */
 export const HOOKS = [
@@ -58,12 +58,15 @@ export function mergeOptions(parent, child) {
         mergeField(key)
     }
 
-    function mergeField(key) {
-        // 根据key 策略模式
+    function mergeField(key) { // 合并字段 created
+        // 根据key 不同的策略进行合并
+        // 比如 {key: parent[key] child[key]}
+        // 注意 我们这个key可能是一个钩子函数
         if(starts[key]) {
             options[key] = starts[key](parent[key], child[key])
         } else {
-            options[key] = child[key]
+          // 默认合并策略
+            options[key] = child[key] || parent[key]
         }
     }
 

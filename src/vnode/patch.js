@@ -1,13 +1,10 @@
 /*
  * @Author: zdh
  * @Date: 2023-07-04 17:16:53
- * @LastEditTime: 2023-07-20 11:29:07
+ * @LastEditTime: 2023-07-20 16:49:46
  * @Description:
  */
 export function patch(oldVnode, vnode) {
-  console.log('777777777777888888899999997777777')
-  console.dir(oldVnode)
-  console.dir(vnode)
   // 原则 将虚拟节点转换成真实的节点
   // 第一次渲染 oldValue 是一个真实的DOM
   if (oldVnode.nodeType === 1) {
@@ -163,7 +160,7 @@ function updateProps(vnode, oldProps = {}) {
   let newStyle = newProps.style || {}; // 获取新的样式
 
   
-  let oldStyle = oldProps ? oldProps.style : {}; // 获取老的样式
+  let oldStyle = oldProps.style || {}; // 获取老的样式
   for (let key in oldStyle) {
     if (!newStyle[key]) {
       el.style = "";

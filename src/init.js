@@ -1,7 +1,7 @@
 /*
  * @Author: zdh
  * @Date: 2023-07-02 21:13:30
- * @LastEditTime: 2023-07-05 09:35:15
+ * @LastEditTime: 2023-07-20 17:56:56
  * @Description: 
  */
 
@@ -38,13 +38,14 @@ export function initMixin(Vue) {
       if (!template && el) {
         el = el.outerHTML
         // 变成ast语法树
-        let render = compileToFunction(el)
+        const render = compileToFunction(el)
         // render()
 
         // (1) 将render 函数变成vnode  (2) vnode 变成 真实DOM放到页面上去
         options.render = render
       }
     }
+
     // 挂载组件
     mountComponent(vm, el)
   }
